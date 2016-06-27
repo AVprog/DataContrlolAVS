@@ -19,8 +19,24 @@ namespace DataContrlolAVS.ViewModel
 
         #region Bindeble Property
         public ObservableCollection<Model.SensorData> SensorDataList { get; set; } = new ObservableCollection<Model.SensorData>();
-        public SensorData SelectedSensor { get; set; }    
+        private SensorData selectedSensor;
         public ICommand DitailsSensorDataCommand { get; set; }
+
+        public SensorData SelectedSensor
+        {
+            get
+            {
+                return selectedSensor;
+            }
+
+            set
+            {
+                selectedSensor = value;
+                ((Command)DitailsSensorDataCommand).ChangeCanExecute();
+            }
+        }
+
+
         #endregion
 
         IRequestSensorData iRequestSensorData;
@@ -40,7 +56,7 @@ namespace DataContrlolAVS.ViewModel
 
         #endregion
 
-        public MainPageViewModel(IRequestSensorData iRequestSensorData,ISensorDataRepository iSensorDataRepository, ContentPage contentPage)
+        public MainPageViewModel(IRequestSensorData iRequestSensorData, ISensorDataRepository iSensorDataRepository, ContentPage contentPage)
         {
             this.iRequestSensorData = iRequestSensorData;
             this.iSensorDataRepository = iSensorDataRepository;
@@ -51,6 +67,11 @@ namespace DataContrlolAVS.ViewModel
             DitailsSensorDataCommand = new Command(async () =>
               {
                   await contentPage.Navigation.PushAsync(new DataContrlolAVS.Pages.DitailsSensorDataPage(iSensorDataRepository.GetSensorDataByName(SelectedSensor.SensorName)));
+              },
+              
+              ()=>
+              {
+                  return SelectedSensor != null;
               });
         }
 
@@ -59,7 +80,7 @@ namespace DataContrlolAVS.ViewModel
         {
             var sensorDataCollection = iRequestSensorData.GetSensorData();
             iSensorDataRepository.AddSensorData(sensorDataCollection);
-           
+
             if (SensorDataList.Count == 0) //init of SensorDataList
             {
                 SensorDataList.Clear();
@@ -73,9 +94,9 @@ namespace DataContrlolAVS.ViewModel
             {
                 foreach (SensorData sensorData in sensorDataCollection)
                 {
-               
+
                     sensorData.ReciveTime = DateTime.Now;
-                    SensorData oldSensorData=SensorDataList.FirstOrDefault(sdl => sdl.SensorName == sensorData.SensorName);
+                    SensorData oldSensorData = SensorDataList.FirstOrDefault(sdl => sdl.SensorName == sensorData.SensorName);
                     if (oldSensorData != null)
                     {
 
@@ -84,10 +105,10 @@ namespace DataContrlolAVS.ViewModel
                         oldSensorData.MaxTemperature = sensorData.MaxTemperature;
                         oldSensorData.MinTemperature = sensorData.MinTemperature;
                         oldSensorData.SensorState = sensorData.SensorState;
-             
+
                     }
                 }
-            
+
             }
             return true;
         }
