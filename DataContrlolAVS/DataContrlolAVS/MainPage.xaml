@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:infrastructure="clr-namespace:DataContrlolAVS.Infrastructures"
+             xmlns:local="clr-namespace:DataContrlolAVS"
+             x:Class="DataContrlolAVS.MainPage"
+             x:Name="MainPageName">
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <infrastructure:TemperatureToColorConverter x:Key="TemperatureToColorConverterKey"></infrastructure:TemperatureToColorConverter>
+      <infrastructure:SensorDataToColorConverter x:Key="SensorDataToColorConverterKey"></infrastructure:SensorDataToColorConverter>
+    </ResourceDictionary>
+  </ContentPage.Resources>
+
+  <StackLayout Padding="10">
+    <Frame>
+      <StackLayout Orientation="Vertical">
+        <Label Text="DataContrlolAVS" HorizontalOptions="CenterAndExpand" FontSize="Large"></Label>
+        <StackLayout Orientation="Horizontal">
+          <Label Text="{Binding  Source={x:Reference mainListView}, Path=SelectedItem.SensorName}"></Label>
+          <Label Text="{Binding  Source={x:Reference mainListView}, Path=SelectedItem.MaxTemperature, StringFormat=' max: {0:0.0}'}"></Label>
+          <Label Text="{Binding  Source={x:Reference mainListView}, Path=SelectedItem.MinTemperature, StringFormat=' min: {0:0.0}'}"></Label>
+        </StackLayout>
+      </StackLayout>
+    </Frame>
+    <Frame>
+      <StackLayout Orientation="Vertical">
+      <ScrollView>
+        <ListView x:Name="mainListView" ItemsSource="{Binding Path=SensorDataList}" SelectedItem="{Binding Path=SelectedSensor, Mode=OneWayToSource}" >
+          <ListView.ItemTemplate>
+            <DataTemplate>
+              <ViewCell>
+                <ContentView>
+                  <Grid>
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="2*"></ColumnDefinition>
+                      <ColumnDefinition Width="2*"></ColumnDefinition>
+                      <ColumnDefinition Width="1*"></ColumnDefinition>                    
+                    <ColumnDefinition Width="5"></ColumnDefinition>                    
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Text="{Binding SensorName}" TextColor="{Binding Path=CurrentTemperature, Converter={StaticResource TemperatureToColorConverterKey}" VerticalOptions="Center"></Label>
+                    <Label Grid.Column="1" Text="{Binding CurrentTemperature}" FontSize="Large" HorizontalOptions="Center" TextColor="{Binding Path=CurrentTemperature, Converter={StaticResource TemperatureToColorConverterKey}"></Label>
+                    <Label Grid.Column="2" Text="{Binding SensorState}" HorizontalOptions="EndAndExpand" VerticalOptions="Center"></Label>
+                  
+                  </Grid>
+                </ContentView>
+              </ViewCell>
+            </DataTemplate>
+          </ListView.ItemTemplate>
+
+        </ListView>
+      </ScrollView>
+      <Button Text="Ditails Sensor Information"  HorizontalOptions="FillAndExpand" FontSize="Small" Command="{Binding  Path=DitailsSensorDataCommand}"></Button>
+      </StackLayout>
+    </Frame>
+  </StackLayout>
+
+</ContentPage>
