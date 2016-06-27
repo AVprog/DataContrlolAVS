@@ -4,7 +4,8 @@
               xmlns:infrastructure="clr-namespace:DataContrlolAVS.Infrastructures"
              xmlns:local="clr-namespace:DataContrlolAVS"
              x:Class="DataContrlolAVS.MainPage"
-             x:Name="MainPageName">
+             x:Name="MainPageName"
+             Style="{StaticResource visualStyle}">
   <ContentPage.Resources>
     <ResourceDictionary>
       <infrastructure:TemperatureToColorConverter x:Key="TemperatureToColorConverterKey"></infrastructure:TemperatureToColorConverter>
@@ -53,7 +54,7 @@
 
         </ListView>
       </ScrollView>
-      <Button Text="Ditails Sensor Information"  HorizontalOptions="FillAndExpand" FontSize="Small" Command="{Binding  Path=DitailsSensorDataCommand}"></Button>
+      <Button Style="{StaticResource visualStyle}" Text="Ditails Sensor Information"  HorizontalOptions="FillAndExpand" FontSize="Small" Command="{Binding  Path=DitailsSensorDataCommand}"></Button>
       </StackLayout>
     </Frame>
   </StackLayout>
